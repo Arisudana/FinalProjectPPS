@@ -1,3 +1,4 @@
-PPS/FinalProject/backend/.env
-PPS/FinalProject/frontend/node_modules
-PPS/FinalProject/backend/node_modules
+backend/.env
+backend/node_modules
+frontend/node_modules
+PPS\FinalProject\frontend\node_modules
