@@ -1,0 +1,97 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #282c34; /* Warna background header */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.header .nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.header .nav ul li {
+  margin-left: 20px;
+}
+
+.header .nav ul li a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: color 0.3s ease;
+}
+
+.header .nav ul li a:hover {
+  color: #61dafb; /* Warna hover */
+}
+
+.user-profile {
+  position: relative; /* Penting untuk positioning dropdown */
+}
+
+.user-icon-button {
+  background: none;
+  border: none;
+  color: rgb(104, 103, 103);
+  font-size: 1.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Jarak antara ikon user dan panah */
+}
+
+.user-icon-button:hover {
+  color: rgb(104, 103, 103);
+}
+
+.user-icon {
+  /* Gaya spesifik untuk ikon user */
+}
+
+.caret-icon {
+  font-size: 0.8em; /* Ukuran panah lebih kecil */
+  transition: transform 0.3s ease;
+}
+
+/* Transformasi panah ketika dropdown terbuka - tidak diperlukan lagi karena kita ganti icon */
+/* .user-profile.open .caret-icon {
+  transform: rotate(180deg);
+} */
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Posisikan di bawah tombol */
+  right: 0;
+  background-color: rgb(104, 103, 103); /* Warna background dropdown */
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+  z-index: 10; /* Pastikan dropdown di atas konten lain */
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #555; /* Warna hover item dropdown */
+}

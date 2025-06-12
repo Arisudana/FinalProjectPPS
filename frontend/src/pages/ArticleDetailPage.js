@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import DetailLayout from '../layouts/DetailLayout';
+import ShareModal from '../components/ShareModal'; // Import ShareModal
 
 const ArticleDetailPage = () => {
     const { id } = useParams();
@@ -8,7 +10,8 @@ const ArticleDetailPage = () => {
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
     // DITAMBAHKAN: State untuk melacak status 'suka' dari user
     const [isLiked, setIsLiked] = useState(false);
 
@@ -17,7 +20,7 @@ const ArticleDetailPage = () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/articles/${id}`);
                 setArticle(response.data);
-                
+
                 // DITAMBAHKAN: Cek localStorage untuk melihat apakah artikel ini sudah disukai
                 const likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
                 if (likedArticles.includes(id)) {
@@ -34,6 +37,14 @@ const ArticleDetailPage = () => {
         fetchArticle();
     }, [id]);
 
+    const handleShareClick = () => {
+        setIsShareModalOpen(true); // Buka modal ketika tombol bagikan diklik
+    };
+
+    const handleCloseShareModal = () => {
+        setIsShareModalOpen(false); // Tutup modal
+    };
+
     // DIUBAH: Fungsi untuk menangani toggle like/unlike
     const handleToggleLike = async () => {
         const endpoint = isLiked ? 'unlike' : 'like';
@@ -45,7 +56,7 @@ const ArticleDetailPage = () => {
             ...prevArticle,
             likes_count: newIsLiked ? prevArticle.likes_count + 1 : prevArticle.likes_count - 1,
         }));
-        
+
         // Update localStorage
         let likedArticles = JSON.parse(localStorage.getItem('likedArticles')) || [];
         if (newIsLiked) {
@@ -66,11 +77,11 @@ const ArticleDetailPage = () => {
                 ...prevArticle,
                 likes_count: !newIsLiked ? prevArticle.likes_count + 1 : prevArticle.likes_count - 1,
             }));
-             // Rollback localStorage juga
+            // Rollback localStorage juga
             let currentLiked = JSON.parse(localStorage.getItem('likedArticles')) || [];
-             if (!newIsLiked) { currentLiked.push(id); } 
-             else { currentLiked = currentLiked.filter(articleId => articleId !== id); }
-             localStorage.setItem('likedArticles', JSON.stringify(currentLiked));
+            if (!newIsLiked) { currentLiked.push(id); }
+            else { currentLiked = currentLiked.filter(articleId => articleId !== id); }
+            localStorage.setItem('likedArticles', JSON.stringify(currentLiked));
         }
     };
 
@@ -84,7 +95,7 @@ const ArticleDetailPage = () => {
         padding: '20px 10%', // Padding atas-bawah 20px, kanan-kiri 10%
         fontFamily: 'sans-serif'
     };
-    
+
     // Style untuk header (Tag di kiri, Tombol di kanan)
     const articleHeaderStyle = {
         display: 'flex',
@@ -114,13 +125,16 @@ const ArticleDetailPage = () => {
         borderColor: '#007bff'
     };
 
+    // Generate the current article URL for sharing
+    const currentArticleUrl = window.location.href;
+
     return (
         <div style={pageStyle}>
             {/* Poin 1: Tombol Kembali diperbaiki */}
             <button onClick={() => navigate('/')} style={{ ...buttonStyle, marginBottom: '20px' }}>
                 &larr; Kembali
             </button>
-            
+
             <h1>{article.title}</h1>
             <p>
                 Oleh: <strong>{article.author}</strong> | Tanggal Terbit: {new Date(article.created_at).toLocaleDateString('id-ID')}
@@ -136,14 +150,19 @@ const ArticleDetailPage = () => {
                     <button onClick={handleToggleLike} style={isLiked ? likedButtonStyle : buttonStyle}>
                         ❤️ {article.likes_count} {isLiked ? 'Disukai' : 'Suka'}
                     </button>
-                    <button style={buttonStyle}>
+                    <button style={buttonStyle} className="share-button" onClick={handleShareClick}>
                         🔗 Bagikan
                     </button>
                 </div>
+                <ShareModal
+                    isOpen={isShareModalOpen}
+                    onClose={handleCloseShareModal}
+                    articleUrl={currentArticleUrl}
+                />
             </div>
 
             {/* Poin 3: Divider Garis */}
-            <hr style={{ border: 'none', borderBottom: '1px solid #e0e0e0', marginBottom: '20px' }}/>
+            <hr style={{ border: 'none', borderBottom: '1px solid #e0e0e0', marginBottom: '20px' }} />
 
             <div style={contentStyle}>
                 {article.content}
