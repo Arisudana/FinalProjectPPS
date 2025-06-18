@@ -9,6 +9,11 @@ import DetailLayout from './layouts/DetailLayout';
 // Import Pages
 import ArticlePage from './pages/ArticlePage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
+import LoginPage from './pages/LoginPage'; 
+import AdminPage from './pages/AdminPage';
+
+// Components
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -18,11 +23,21 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<ArticlePage />} />
         </Route>
-
         {/* Rute yang menggunakan DetailLayout (tanpa Sidebar) */}
         <Route element={<DetailLayout />}>
           <Route path="/articles/:id" element={<ArticleDetailPage />} />
         </Route>
+        {/* Rute untuk halaman login */}
+        <Route path="/login" element={<LoginPage />} />
+        {/* Rute untuk halaman admin yang dilindungi */}
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

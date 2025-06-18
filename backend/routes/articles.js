@@ -13,6 +13,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// GET: Mendapatkan artikel tunggal berdasarkan ID
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const article = await pool.query("SELECT * FROM articles WHERE id = $1", [id]);
+
+        if (article.rows.length === 0) {
+            return res.status(404).json("Artikel tidak ditemukan");
+        }
+
+        res.json(article.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 // POST: Membuat artikel baru (Sesuai use case 1a.4) 
 router.post('/', async (req, res) => {
     try {
@@ -38,29 +55,47 @@ router.post('/', async (req, res) => {
     }
 });
 
-// DELETE: Menghapus artikel (Sesuai use case 1c.6) 
-router.delete('/:id', async (req, res) => {
+// PUT: Memperbarui artikel berdasarkan ID (Sesuai UCD 1b)
+router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await pool.query("DELETE FROM articles WHERE id = $1", [id]);
-        res.json("Artikel Berhasil Dihapus"); // System response 
+        const { title, content, image_url, author } = req.body;
+
+        // Validasi input
+        if (!title || !content) {
+            return res.status(400).json({ msg: "Mohon lengkapi semua informasi yang diperlukan sebelum menyimpan." });
+        }
+
+        const updateArticle = await pool.query(
+            "UPDATE articles SET title = $1, content = $2, image_url = $3, author = $4 WHERE id = $5 RETURNING *",
+            [title, content, image_url, author || 'Admin', id]
+        );
+
+        if (updateArticle.rows.length === 0) {
+            return res.status(404).json({ msg: "Artikel tidak ditemukan." });
+        }
+        // System response: Artikel Berhasil Diubah 
+        res.json({ msg: "Artikel Berhasil Diubah", article: updateArticle.rows[0] });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server Error");
+        if (err.code === '23505') {
+            return res.status(400).json({ msg: "Judul artikel sudah digunakan. Harap gunakan judul yang berbeda." });
+        }
+        res.status(500).json({ msg: "Gagal menyimpan perubahan. Silakan coba lagi nanti." });
     }
 });
 
-// GET: Mendapatkan artikel tunggal berdasarkan ID
-router.get('/:id', async (req, res) => {
+// DELETE: Menghapus artikel (Sesuai UCD 1c.6) 
+router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const article = await pool.query("SELECT * FROM articles WHERE id = $1", [id]);
+        const deleteOp = await pool.query("DELETE FROM articles WHERE id = $1 RETURNING id", [id]);
 
-        if (article.rows.length === 0) {
-            return res.status(404).json("Artikel tidak ditemukan");
+        if (deleteOp.rowCount === 0) {
+            return res.status(404).json({ msg: "Artikel tidak ditemukan." });
         }
 
-        res.json(article.rows[0]);
+        res.json({ msg: "Artikel Berhasil Dihapus" }); // System response 
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
