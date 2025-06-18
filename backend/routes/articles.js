@@ -33,14 +33,14 @@ router.get('/:id', async (req, res) => {
 // POST: Membuat artikel baru (Sesuai use case 1a.4) 
 router.post('/', async (req, res) => {
     try {
-        const { title, content, image_url } = req.body;
+        const { title, content, image_url, author, tags } = req.body;
         // Exception path E1.3: Validasi input 
-        if (!title || !content) {
+        if (!title || !content|| !author) {
             return res.status(400).json({ msg: "Mohon lengkapi semua informasi yang diperlukan sebelum menyimpan." });
         }
         const newArticle = await pool.query(
-            "INSERT INTO articles (title, content, image_url) VALUES($1, $2, $3) RETURNING *",
-            [title, content, image_url]
+            "INSERT INTO articles (title, content, image_url, author, tags) VALUES($1, $2, $3, $4, $5) RETURNING *",
+            [title, content, image_url, author, tags]
         );
         // System response: Artikel Berhasil Dibuat 
         res.json({ msg: "Artikel Berhasil Dibuat", article: newArticle.rows[0] });
@@ -59,16 +59,16 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, content, image_url, author } = req.body;
+        const { title, content, image_url, author, tags } = req.body;
 
         // Validasi input
-        if (!title || !content) {
+        if (!title || !content || !author) {
             return res.status(400).json({ msg: "Mohon lengkapi semua informasi yang diperlukan sebelum menyimpan." });
         }
 
         const updateArticle = await pool.query(
-            "UPDATE articles SET title = $1, content = $2, image_url = $3, author = $4 WHERE id = $5 RETURNING *",
-            [title, content, image_url, author || 'Admin', id]
+            "UPDATE articles SET title = $1, content = $2, image_url = $3, author = $4, tags = $5 WHERE id = $6 RETURNING *",
+            [title, content, image_url, author || 'Admin', tags, id]
         );
 
         if (updateArticle.rows.length === 0) {

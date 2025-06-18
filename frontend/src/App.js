@@ -11,6 +11,7 @@ import ArticlePage from './pages/ArticlePage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import LoginPage from './pages/LoginPage'; 
 import AdminPage from './pages/AdminPage';
+import ArticleEditorPage from './pages/ArticleEditorPage';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -38,6 +39,25 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Rute untuk halaman tambah artikel */}
+        <Route 
+          path="/admin/add" 
+          element={
+            <ProtectedRoute>
+              <ArticleEditorPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Rute untuk halaman editor artikel (tambah/edit) */}
+        <Route 
+          path="/admin/edit/:id?" 
+          element={
+            <ProtectedRoute>
+              <ArticleEditorPage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </Router>
   );
