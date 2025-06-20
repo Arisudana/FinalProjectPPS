@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import AdminHeader from '../components/AdminHeader';
 import ConfirmModal from '../components/ConfirmModal';
+import ArticleCard from '../components/ArticleCard';
 
 // Komponen MeatballMenu tetap sama seperti sebelumnya
 const MeatballMenu = ({ onEdit, onDelete }) => {
@@ -35,7 +36,7 @@ const MeatballMenu = ({ onEdit, onDelete }) => {
         cursor: 'pointer',
     };
     menuItemStyle[':hover'] = {
-      backgroundColor: '#f0f0f0'
+        backgroundColor: '#f0f0f0'
     };
 
 
@@ -100,7 +101,6 @@ const AdminPage = () => {
     const pageStyle = { display: 'flex' };
     const mainContentStyle = { flex: 1, padding: '20px' };
     const articleListStyle = { marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '20px' };
-    const articleCardStyle = { padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', position: 'relative', background: '#fff' };
     const buttonStyle = {
         padding: '8px 16px',
         cursor: 'pointer',
@@ -124,10 +124,8 @@ const AdminPage = () => {
                     {loading ? <p>Loading...</p> : (
                         <div style={articleListStyle}>
                             {articles.map(article => (
-                                <div key={article.id} style={articleCardStyle}>
-                                    <h3>{article.title}</h3>
-                                    <p>{article.content.substring(0, 150)}...</p>
-                                    <small>Dibuat: {new Date(article.created_at).toLocaleDateString()}</small>
+                                <div key={article.id} style={{ position: 'relative' }}>
+                                    <ArticleCard article={article} />
                                     <MeatballMenu
                                         onEdit={() => handleEdit(article)}
                                         onDelete={() => setDeletingArticle(article)}

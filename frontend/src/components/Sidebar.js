@@ -8,13 +8,15 @@ const Sidebar = () => {
         height: '100vh',
     };
     const logoStyle = {
-        backgroundColor: '#c4c4c4',
-        height: '100px',
+        backgroundColor: '#9c8c8c',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: '30px',
-        color: '#fff',
+        padding: '20px',
+        ontWeight: 'bold',
+        color: 'white',
+        fontSize: '20px'
     };
     const menuActiveStyle = {
         backgroundColor: '#dcdcdc',
@@ -29,7 +31,7 @@ const Sidebar = () => {
 
     return (
         <div style={sidebarStyle}>
-            <div style={logoStyle}>Logo GGIWP</div>
+            <div style={logoStyle}>Logo<br /> GG!WP</div>
             <nav>
                 <div style={menuActiveStyle}>Artikel</div>
                 <div style={menuStyle}>Asesmen</div>

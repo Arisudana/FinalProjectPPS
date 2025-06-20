@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import DetailLayout from '../layouts/DetailLayout';
 import ShareModal from '../components/ShareModal'; // Import ShareModal
 
 const ArticleDetailPage = () => {
@@ -125,6 +124,15 @@ const ArticleDetailPage = () => {
         borderColor: '#007bff'
     };
 
+    const getTagStyle = () => ({
+        backgroundColor: '#e0e0e0',
+        padding: '5px 10px',
+        marginRight: '10px',
+        borderRadius: '5px',
+        fontSize: '12px',
+        display: 'inline-block',
+    });
+
     // Generate the current article URL for sharing
     const currentArticleUrl = window.location.href;
 
@@ -143,8 +151,9 @@ const ArticleDetailPage = () => {
             {/* Poin 4: Penempatan Tombol Suka/Bagikan */}
             <div style={articleHeaderStyle}>
                 <div> {/* Wadah untuk tag */}
-                    <span style={{ backgroundColor: '#e0e0e0', padding: '5px 10px', marginRight: '10px', borderRadius: '5px' }}>Tag #1</span>
-                    <span style={{ backgroundColor: '#e0e0e0', padding: '5px 10px', marginRight: '10px', borderRadius: '5px' }}>Tag #2</span>
+                    {article.tags && article.tags.split(',').map((tag, index) => (
+                        <span key={index} style={getTagStyle()}>{tag.trim()}</span>
+                    ))}
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}> {/* Wadah untuk tombol */}
                     <button onClick={handleToggleLike} style={isLiked ? likedButtonStyle : buttonStyle}>

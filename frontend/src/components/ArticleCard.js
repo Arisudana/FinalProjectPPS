@@ -21,8 +21,9 @@ const ArticleCard = ({ article }) => {
                     <p>{article.content.substring(0, 150)}...</p>
                     <small>Oleh: {article.author} | Disukai: {article.likes_count}</small>
                     <div style={{ marginTop: '10px' }}>
-                        <span style={tagStyle}>Tag #1</span>
-                        <span style={tagStyle}>Tag #2</span>
+                        {article.tags && article.tags.split(',').map((tag, index) => (
+                            <span key={index} style={tagStyle}>{tag.trim()}</span>
+                        ))}
                     </div>
                 </div>
             </div>

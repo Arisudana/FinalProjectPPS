@@ -44,12 +44,6 @@ const AdminHeader = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
     };
-
-    const buttonStyle = {
-        padding: '8px 12px',
-        cursor: 'pointer',
-    };
-
     return (
         <header style={headerStyle}>
             <h2>Selamat Datang Admin!</h2>
